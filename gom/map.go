@@ -15,7 +15,7 @@ const (
 	iniItemCnt = 64
 )
 
-//
+// Newgom ...
 //
 //
 func Newgom() *gom {
@@ -36,6 +36,8 @@ func (m *gom) Add(k interface{}, v interface{}, replace bool) (bool, error) {
 		return false, errors.New("k is nil")
 	}
 
+	m.Lock()
+	defer m.Unlock()
 	if _, ok := m.m[k]; ok {
 		if replace {
 			m.m[k] = &v
@@ -56,6 +58,9 @@ func (m *gom) RemoveByKey(k interface{}) (bool, error) {
 		return false, errors.New("m is nil")
 	}
 
+	m.Lock()
+	defer m.Unlock()
+
 	if _, ok := m.m[k]; ok {
 		delete(m.m, k)
 		return true, nil
@@ -70,6 +75,10 @@ func (m *gom) RemoveByValue(v *interface{}) (bool, error) {
 	if nil == m || nil == m.m {
 		return false, errors.New("m is nil")
 	}
+
+	m.Lock()
+	defer m.Unlock()
+
 	opted := false
 	for key, val := range m.m {
 		if *val == *v {
@@ -91,6 +100,9 @@ func (m *gom) GetValueByKey(k interface{}) (interface{}, error) {
 		return nil, errors.New("m is nil")
 	}
 
+	m.Lock()
+	defer m.Unlock()
+
 	if val, ok := m.m[k]; ok {
 		return val, nil
 	}
@@ -104,6 +116,9 @@ func (m *gom) GetKeysByValue(v *interface{}) ([]interface{}, error) {
 	if nil == m || nil == m.m {
 		return nil, errors.New("m is nil")
 	}
+
+	m.Lock()
+	defer m.Unlock()
 
 	var keys []interface{}
 	for key, val := range m.m {
@@ -125,5 +140,6 @@ func (m *gom) GetCount() int {
 
 	m.Lock()
 	defer m.Unlock()
+
 	return len(m.m)
 }
