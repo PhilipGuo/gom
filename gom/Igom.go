@@ -9,7 +9,7 @@ type Igom interface {
 	// 根据键删除
 	ReomveByKey(interface{}) (bool, error)
 	// 根据值删除
-	RemoveByValue(interface{}) (bool, error)
+	RemoveByValue(*interface{}) (bool, error)
 
 	// 根据键读取
 	GetValueByKey(interface{}) (interface{}, error)

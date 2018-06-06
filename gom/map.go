@@ -27,7 +27,7 @@ func Newgom() *gom {
 //
 //
 //
-func (m *gom) Add(k interface{}, v interface{}, replace bool) (bool, error) {
+func (m *gom) Add(k interface{}, v *interface{}, replace bool) (bool, error) {
 	if nil == m || nil == m.m {
 		return false, errors.New("m is nil")
 	}
@@ -40,12 +40,12 @@ func (m *gom) Add(k interface{}, v interface{}, replace bool) (bool, error) {
 	defer m.Unlock()
 	if _, ok := m.m[k]; ok {
 		if replace {
-			m.m[k] = &v
+			m.m[k] = v
 		} else {
 			return false, errors.New("k is already exists, and replace is false")
 		}
 	} else {
-		m.m[k] = &v
+		m.m[k] = v
 	}
 	return true, nil
 }
@@ -133,7 +133,7 @@ func (m *gom) GetKeysByValue(v *interface{}) ([]interface{}, error) {
 //
 // get count
 //
-func (m *gom) GetCount() int {
+func (m *gom) Count() int {
 	if nil == m || nil == m.m {
 		return 0
 	}

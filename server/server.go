@@ -42,7 +42,7 @@ func (server *TCPServer) Start() (bool, error) {
 	if nil != err {
 		return false, err
 	}
-
+	server.m = gom.Newgom()
 	server.lins = &l
 	for {
 		c, err := (*server.lins).Accept()
@@ -50,7 +50,7 @@ func (server *TCPServer) Start() (bool, error) {
 			// todo
 		}
 
-		se := NewSession(&c)
+		se := NewSession(&c, server.m)
 		server.sessions.Put(c.RemoteAddr().String(), se)
 		// todo
 		// se.start()
