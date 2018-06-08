@@ -21,3 +21,14 @@ type Session struct {
 	// 数据存储
 	m gom.Igom
 }
+
+// NewSession
+//
+func NewSession(c *net.Conn) *Session {
+	return &Session{
+		con:       c,
+		recvbuf:   bufm.NewBufManager(),
+		recvpacks: make(chan *proto.Packet),
+		sendpacks: make(chan *proto.Packet),
+	}
+}

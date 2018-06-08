@@ -13,8 +13,9 @@ type TCPServer struct {
 	port int
 
 	// 监听socket
-	con *net.Conn
-
+	lins *net.Listener
+	// 用户连接
+	sessions *SessionBucket
 	// 退出标志
 	exit chan int
 
@@ -25,8 +26,10 @@ type TCPServer struct {
 //
 func (server *TCPServer) NewTCPServer(ip string, port int) *TCPServer {
 	return &TCPServer{
-		ip:   ip,
-		port: port,
+		ip:       ip,
+		port:     port,
+		sessions: NewSessionBucket(),
+		//m:        gom.Newgom(),
 		exit: make(chan int, 1),
 	}
 }
@@ -34,6 +37,24 @@ func (server *TCPServer) NewTCPServer(ip string, port int) *TCPServer {
 func (server *TCPServer) Start() (bool, error) {
 	if nil == server {
 		return false, errors.New("server is nil")
+	}
+	l, err := net.Listen("tcp", server.ip+":"+string(server.port))
+	if nil != err {
+		return false, err
+	}
+
+	server.lins = &l
+	for {
+		c, err := (*server.lins).Accept()
+		if nil != err {
+			// todo
+		}
+
+		se := NewSession(&c)
+		server.sessions.Put(c.RemoteAddr().String(), se)
+		// todo
+		// se.start()
+
 	}
 
 	return true, nil

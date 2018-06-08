@@ -51,3 +51,12 @@ func (sbk *SessionBucket) Delete(remoteaddr string) bool {
 	delete(sbk.smap, remoteaddr)
 	return true
 }
+
+// Count return session number
+//
+func (sbk *SessionBucket) Count() int {
+	if nil == sbk || nil == sbk.smap {
+		return 0
+	}
+	return len(sbk.smap)
+}
